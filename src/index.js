@@ -9,18 +9,6 @@ const Task = (description, done = false) => {
     }
 }
 
-// // testing the task factory
-
-// let laundry = Task('wash the laundry');
-
-// console.log(laundry.done);
-// laundry.toggle();
-// console.log(laundry.done);
-
-// console.log(laundry.description);
-// laundry.edit('dry the laundry');
-// console.log(laundry.description);
-
 const Todo = (title, priority = 'no priority', due = 0, description = '') => {
     const tasks = [];
     return {
@@ -30,6 +18,7 @@ const Todo = (title, priority = 'no priority', due = 0, description = '') => {
         get priority() {return priority},
         get due() {return due},
         get description() {return description},
+
         // further getters
         get total() {return tasks.length},
         get totalComplete() {
@@ -39,9 +28,11 @@ const Todo = (title, priority = 'no priority', due = 0, description = '') => {
             }; 
             return counter;
         },
+
         // editions to the tasklist
         add: task => tasks.push(task),
         remove: number => tasks.splice(number - 1, 1),
+
         // setters for the details
         set title(text) {title = text.toString()},
         set priority(number) {
@@ -57,44 +48,53 @@ const Todo = (title, priority = 'no priority', due = 0, description = '') => {
             else if (date == 0) {due = 0}
         },
         set description(text) {description = text.toString()},
-        // FOR CONSOLE ONLY
-        print: () => {
-            let counter = 0;
-            let list = `(${priority}) ${title}\n${description}\n`;
-            if (due != 0) {
-                list += `due on ${format(due, 'MM/dd/yyyy')} (${formatDistanceToNow((due), {addSuffix: true})})\n\n`;
-            } else {
-                list += `no due date\n\n`;
-            }
 
-            for (let task of tasks) {
-                counter++;
-                list += `${counter}. ${task.description}\n`;
-            }
-            list += `\n${counter} tasks total`
-            return list;
-        }
+        // // FOR CONSOLE ONLY
+        // print: () => {
+        //     let counter = 0;
+        //     let list = `(${priority}) ${title}\n${description}\n`;
+        //     if (due != 0) {
+        //         list += `due on ${format(due, 'MM/dd/yyyy')} (${formatDistanceToNow((due), {addSuffix: true})})\n\n`;
+        //     } else {
+        //         list += `no due date\n\n`;
+        //     }
+        //     for (let task of tasks) {
+        //         counter++;
+        //         list += `${counter}. ${task.description}\n`;
+        //     }
+        //     list += `\n${counter} tasks total`
+        //     return list;
+        // }
     }
 }
 
-// // testing the todo factory
+const Project = title => {
+    const todos = [];
+    return {
+        // basic getters
+        get todos() {return todos},
+        get title() {return title},
+        get total() {return todos.length},
 
-// let chores = Todo('my chores');
-// chores.add(Task('wash dishes'));
-// chores.add(Task('make laundry'));
-// chores.add(Task('cook lunch'));
-// console.log(chores.print());
-// chores.remove(2);
-// console.log(chores.print());
-// // test set title
-// chores.title = 'your chores';
-// console.log(chores.print());
-// // test set description
-// chores.description = 'lorem ipsum dolor sit amet';
-// console.log(chores.print());
-// // test set priority
-// chores.priority = 3;
-// console.log(chores.print());
-// // test set due date
-// chores.due = new Date(2023, 3, 2);
-// console.log(chores.print());
+        // counter getters
+        get totalTasks() {
+            let counter = 0;
+            for (let todo of todos) {
+                counter += todo.total;
+            } return counter;
+        },
+        get totalTasksComplete() {
+            let counter = 0;
+            for (let todo of todos) {
+                counter += todo.totalComplete;
+            } return counter;
+        },
+
+        // editions to the todolist
+        add: todo => todos.push(todo),
+        remove: number => todos.splice(number - 1, 1),
+
+        // setters
+        set title(text) {title = text.toString()},
+    }
+}
