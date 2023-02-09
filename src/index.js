@@ -2,7 +2,6 @@ import './styles/main.scss';
 import { Task, Todo, Project } from './core.js';
 import { $, create } from './modules/basic';
 import { startup } from './modules/startup';
-import { NoEmitOnErrorsPlugin } from 'webpack';
 
 
 const App = (() => {
@@ -26,40 +25,18 @@ const App = (() => {
             let title = create('p', 'project-title', p.title, project);
             let totalTasks = create('small', 'project-total-tasks', p.total, project);
             let todos = create('ul', 'project-todos', undefined, project);
-            todos.style.display = 'none';
+            
             for (let t of p.todos) {
                 let todo = create('li', 'project-todo', undefined, todos);
                 let priority = create('div', `todo-priority-${t.priority}`, undefined, todo);
                 let todoTitle = create('span', 'todo-title', t.title, todo);
             };
+            // todos.style.display = 'none';
             // title.addEventListener('click', () => {
             //     todos.style.display = (todos.style.display === 'none') ? 'block':'none';
             // })
         }
     }
-
-    // const populateSidebar = function() {
-    //     document.querySelector('.sidebar').innerHTML = '';
-    //     for (let project of projects) {
-
-            
-    //         for (let todo of project.todos) {
-    //             let listItem = document.createElement('li');
-    //             listItem.textContent = todo.title;
-    //             list.appendChild(listItem);
-    //         }
-
-    //         div.appendChild(title);
-    //         div.appendChild(total);
-    //         div.appendChild(list);
-
-    //         document.querySelector('.sidebar').appendChild(div);
-
-    //         title.addEventListener('click', () => {
-    //             list.style.display = (list.style.display === 'none') ? 'block' : 'none' ;
-    //         });
-    //     }
-    // }
 
     return {projects, add, remove}
 })();
