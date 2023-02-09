@@ -16,7 +16,13 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
         get tasks() {return tasks},
         get title() {return title},
         get priority() {return priority},
-        get due() {return due},
+        get due() {
+            if (due != 0) return `due on ${format(due, 'MMMM d, yyyy')}`;
+            else return 'no due date';
+        },
+        get distance() {
+            if (due != 0) return formatDistanceToNow(due, {addSuffix: true});
+        },
         get description() {return description},
 
         // further getters

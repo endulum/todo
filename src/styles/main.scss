@@ -1,6 +1,21 @@
+@font-face {
+    font-family: 'Jost';
+    src: url('../assets/Jost-Medium.ttf');
+}
+@font-face {
+    font-family: 'JostEL';
+    src: url('../assets/Jost-ExtraLight.ttf');
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url('../assets/RobotoCondensed-Light.ttf');
+}
+
 $test: 1px dashed red;
 $box: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
 $boxinset: inset rgba(0, 0, 0, 0.5) 0px 2px 4px, inset rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
+$fallback: Helvetica, Arial, sans-serif;
+
 
 *{box-sizing: border-box};
 
@@ -35,26 +50,106 @@ body {
 } .sidebar {
     height: 100%;
     width: calc(30%);
-} .main {
-    width: calc(100%);
-    height: 100%;
     padding: 20px;
-}
-
-#content {
-    width: 100%;
-    height: 100%;
+    padding-right: 0;
+} .main {
+    width: calc(100% - 20px);
+    height: calc(100% - 40px);
+    margin: 20px;
     background-color: rgba(0,0,0,0.375);
     padding: 20px;
     box-shadow: $boxinset;
 }
 
+///////////// SIDEBAR!
 
+#projects {
+    > div {
+        padding: 10px;
+        &:hover {
+            background-color: rgba(0,0,0,0.5);
+            box-shadow: $boxinset;
+            cursor: pointer;
+        }
+        p {
+            font-family: 'Jost', $fallback;
+            font-size: 1.25rem;
+        }
+        small {
+            font-family: 'Roboto', $fallback;
+            font-size: 0.75rem;
+        }
+    }
+}
 
-// .test {
-//     border-radius: 5px;
-//     width: 190px;
-//     height: 254px;
-//     background: rgb(233, 233, 233);
-//     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-// }
+.todo-count {
+    font-weight: bold;
+    &::after {
+        content: ' ~ ';
+    }
+}
+
+///////////// MAIN!
+
+#content {
+    max-width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.card {
+    padding: 15px;
+    // by adamgiebl on uiverse
+    background: rgb(236, 236, 236);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    border-radius: 5px;
+    color: black;
+    max-width: 1fr;
+    h3 {
+        margin-top: 5px;
+        font-family: 'Jost', $fallback;
+        font-weight: normal;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+    } p {
+        font-family: 'Roboto', $fallback;
+        margin-bottom: 10px;
+        small {
+            font-weight: bold;
+        }
+    }
+}
+
+.priority {
+    font-family: 'Jost', $fallback;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: white;
+    line-height: 1rem;
+    padding: 3px 8px;
+    border-radius: 15px;
+    display: inline;
+    &.none {
+        background-color: gray;
+    } &.low {
+        background-color: mediumseagreen;
+    } &.medium {
+        background-color: goldenrod;
+    } &.high {
+        background-color: crimson;
+    }
+}
+
+.tasks {
+    list-style: none;
+    li {
+        margin-top: 5px;
+    } input {
+        margin: 0;
+    } label {
+        font-family: 'Roboto', $fallback;
+        margin-left: 5px;
+    }
+}

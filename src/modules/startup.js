@@ -1,24 +1,18 @@
+import { $, create } from './basic';
+
 export const startup = (db => {
     console.warn('Immediately invoking startup. This should only happen once.');
 
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('wrapper');
-    db.appendChild(wrapper);
+    const wrapper = create('div', 'wrapper', undefined, db);
 
-    const sidebar = document.createElement('aside');
-    sidebar.classList.add('sidebar');
-    wrapper.appendChild(sidebar);
+    const sidebar = create('aside', 'sidebar', undefined, wrapper);
 
-    const mainstuff = document.createElement('main');
-    mainstuff.classList.add('main');
-    wrapper.appendChild(mainstuff);
+    const main = create('main', 'main', undefined, wrapper);
 
-    const content = document.createElement('div');
+    const content = create('div', undefined, undefined, main);
     content.id = 'content';
-    mainstuff.appendChild(content);
 
-    const projects = document.createElement('ul');
+    const projects = create('div', undefined, undefined, sidebar);
     projects.id = 'projects';
-    sidebar.appendChild(projects);
     
 })(document.body);
