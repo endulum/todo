@@ -9,7 +9,7 @@ export const Task = (description, done = false) => {
     }
 }
 
-export const Todo = (title, priority = 'no priority', due = 0, description = '') => {
+export const Todo = (title, priority = 'none', due = 0, description = '') => {
     const tasks = [];
     return {
         // basic getters
@@ -40,7 +40,7 @@ export const Todo = (title, priority = 'no priority', due = 0, description = '')
                 case 1: priority = 'low'; break;
                 case 2: priority = 'medium'; break;
                 case 3: priority = 'high'; break;
-                default: priority = 'no priority'; break;
+                default: priority = 'none'; break;
             }
         },
         set due(date) {

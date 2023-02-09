@@ -1,30 +1,9 @@
 import './styles/main.scss';
-import {Task, Todo, Project} from './core.js';
+import { Task, Todo, Project } from './core.js';
+import { $, create } from './modules/basic';
+import { startup } from './modules/startup';
+import { NoEmitOnErrorsPlugin } from 'webpack';
 
-const startup = (db => {
-    console.warn('Immediately invoking startup. This should only happen once.');
-
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('wrapper');
-    db.appendChild(wrapper);
-
-    const sidebar = document.createElement('aside');
-    sidebar.classList.add('sidebar');
-    wrapper.appendChild(sidebar);
-
-    const mainstuff = document.createElement('main');
-    mainstuff.classList.add('main');
-    wrapper.appendChild(mainstuff);
-
-    const content = document.createElement('div');
-    content.id = 'content';
-    mainstuff.appendChild(content);
-
-    const projects = document.createElement('ul');
-    projects.id = 'projects';
-    sidebar.appendChild(projects);
-    
-})(document.body);
 
 const App = (() => {
     console.warn('Immediately invoking App. This should only happen once.');
@@ -41,43 +20,51 @@ const App = (() => {
     }
 
     const populateSidebar = function() {
-        document.querySelector('.sidebar').innerHTML = '';
-        for (let project of projects) {
-            let div = document.createElement('div');
-            div.classList.add('project');
-
-            let title = document.createElement('p');
-            title.classList.add('project-title');
-            title.textContent = project.title;
-
-            let total = document.createElement('small');
-            total.classList.add('project-total-tasks');
-            total.textContent = `${project.totalTasks} total tasks`;
-
-            let list = document.createElement('ul');
-            list.classList.add('project-list');
-            list.style.display = 'none';
-            
-            for (let todo of project.todos) {
-                let listItem = document.createElement('li');
-                listItem.textContent = todo.title;
-                list.appendChild(listItem);
-            }
-
-            div.appendChild(title);
-            div.appendChild(total);
-            div.appendChild(list);
-
-            document.querySelector('.sidebar').appendChild(div);
-
-            div.addEventListener('click', () => {
-                list.style.display = (list.style.display === 'none') ? 'block' : 'none' ;
-            });
+        $('.sidebar').innerHTML = '';
+        for (let p of projects) {
+            let project = create('div', 'project', undefined, $('.sidebar'));
+            let title = create('p', 'project-title', p.title, project);
+            let totalTasks = create('small', 'project-total-tasks', p.total, project);
+            let todos = create('ul', 'project-todos', undefined, project);
+            todos.style.display = 'none';
+            for (let t of p.todos) {
+                let todo = create('li', 'project-todo', undefined, todos);
+                let priority = create('div', `todo-priority-${t.priority}`, undefined, todo);
+                let todoTitle = create('span', 'todo-title', t.title, todo);
+            };
+            // title.addEventListener('click', () => {
+            //     todos.style.display = (todos.style.display === 'none') ? 'block':'none';
+            // })
         }
     }
 
+    // const populateSidebar = function() {
+    //     document.querySelector('.sidebar').innerHTML = '';
+    //     for (let project of projects) {
+
+            
+    //         for (let todo of project.todos) {
+    //             let listItem = document.createElement('li');
+    //             listItem.textContent = todo.title;
+    //             list.appendChild(listItem);
+    //         }
+
+    //         div.appendChild(title);
+    //         div.appendChild(total);
+    //         div.appendChild(list);
+
+    //         document.querySelector('.sidebar').appendChild(div);
+
+    //         title.addEventListener('click', () => {
+    //             list.style.display = (list.style.display === 'none') ? 'block' : 'none' ;
+    //         });
+    //     }
+    // }
+
     return {projects, add, remove}
 })();
+
+
 
 let project = Project('Default');
 let chores = Todo('My Chores');
@@ -95,4 +82,3 @@ project.add(chores);
 
 App.add(project);
 App.add(project);
-console.log(App.projects);
