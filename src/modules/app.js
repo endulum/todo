@@ -62,15 +62,20 @@ const makeCardsFor = (project) => {
 
         let tasks = create('ul', 'tasks', undefined, card);
         for (let t of todo.tasks) {
+            
             let task = create('li', undefined, undefined, tasks);
-            let check = create('input', undefined, undefined, task);
+            let circle = create('label', 'circle', undefined, task);
+            let check = create('input', undefined, undefined, circle);
             check.setAttribute('type', 'checkbox');
+            let mark = create('div', 'check', undefined, circle);
+            // let check = create('input', undefined, undefined, task);
+            // check.setAttribute('type', 'checkbox');
             if (t.done) check.checked = true;
             check.addEventListener('click', ()=> {
                 t.toggle();
                 App.populateSidebar();
             });
-            let desc = create('label', undefined, t.description, task);
+            let desc = create('div', undefined, t.description, task);
         }
     }
 }

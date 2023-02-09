@@ -26,7 +26,7 @@ let otherProject = Project('Work');
 let homework = Todo('Homework');
 homework.add(Task('Textbook reading'));
 homework.add(Task('Study for upcoming quiz'));
-homework.add(Task('Attend a Zoom with professor'));
+homework.add(Task('Lorem ipsum dolor sit amet, consectetur adipiscing elit.'));
 homework.add(Task('Attend counseling'));
 let career = Todo('Job Stuff');
 career.add(Task('Board meeting'));
