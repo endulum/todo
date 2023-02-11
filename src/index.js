@@ -15,6 +15,7 @@ chores.add(Task('walk the dog'));
 chores.add(Task('cook dinner'));
 chores.add(Task('clean room'));
 chores.due = new Date(2023, 3, 3);
+chores.priority = 2;
 chores.description = "Lorem ipsum dolor sit amet.";
 hobbies.add(Task('watch a movie'));
 hobbies.add(Task('paint a picture'));
