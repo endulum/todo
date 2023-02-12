@@ -4,9 +4,7 @@ import './style.scss';
 import { Task, Todo, Project } from './logic/core.js';
 import { hobbies, familiars } from './logic/dummy.js';
 
-// iifes
-import { Foundation, App } from './display';
+// app startup
+import { App } from './display/interaction';
 
-App.add(hobbies);
-App.add(familiars);
-
+App.refreshProjectView();

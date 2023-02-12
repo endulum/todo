@@ -30,6 +30,9 @@ aside, main {
     width: 710px;
     height: 610px;
     margin: 20px;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
 } 
 
 #projects, #todos {
@@ -39,7 +42,7 @@ aside, main {
     flex-direction: column;
     gap: 15px;
 } #todos {
-    height: 100%!important;
+    height: 100%;
     
     // display: grid;
     // grid-template-columns: repeat(3, 1fr);
@@ -50,17 +53,17 @@ aside, main {
         clear: both;
     } 
     
-    overflow-y: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    // overflow: hidden;
-    // &:hover {
-    //     overflow-y: auto;
+    // overflow-y: auto;
+    // -ms-overflow-style: none;
+    // scrollbar-width: none;
+    // &::-webkit-scrollbar {
+    //     display: none;
     // }
+
+    overflow: hidden;
+    &:hover {
+        overflow-y: auto;
+    }
 }
 
 .project {
@@ -78,10 +81,12 @@ aside, main {
 }
 
 .todo {
+    max-width: 100%;
     border: 1px solid lightgray;
-    h2 {
-
-    } p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    p {
         margin-bottom: 10px;
     }
 }
@@ -100,16 +105,17 @@ aside, main {
 
 
 .card {
-    // logic for a todo that is in card view
-    float: left;
-    margin-bottom: 15px;
-} .card-sizer {
-
-} .card, .card-sizer {
-    width: calc(33.3% - 10px);
+    h2 {
+        &:hover {
+            cursor: pointer;
+        }
+    } 
 }
 
-.expanded {
+.expand {
+    height: calc(100% - 40px);
     // logic for a todo that is in expanded view
 }
 
+
+.low, .medium, .high, .none {display: none;}

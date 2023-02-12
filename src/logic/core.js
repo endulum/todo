@@ -110,7 +110,7 @@ export const Project = title => {
             let list = ''
             for (let todo of todos) {
                 counter++;
-                list += `${todo.title} - ${todo.totalComplete} out of ${todo.total} tasks complete\n`;
+                list += `${todo.title} - ${todo.totalComplete} out of ${todo.total} total items complete\n`;
             }
             let text = `${title} - ${counter} todos\n`;
             return text + list;
