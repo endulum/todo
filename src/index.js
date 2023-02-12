@@ -5,5 +5,8 @@ import { Task, Todo, Project } from './logic/core.js';
 import { hobbies, familiars } from './logic/dummy.js';
 
 // iifes
-import { Startup } from './display';
+import { Foundation, App } from './display';
+
+App.add(hobbies);
+App.add(familiars);
 

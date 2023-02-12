@@ -4,6 +4,11 @@ $test: 1px dashed red;
     box-sizing: border-box;
 }
 
+body, ul, ol, li, h1, h2, h3, h4, p {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     overflow: hidden;
     width: 100vw;
@@ -15,40 +20,96 @@ body {
 }
 
 aside, main {
-    height: 650px;
     padding: 20px;
 } aside {
     padding-right: 0;
     width: 250px;
+    height: 650px;
 } main {
-    width: 750px;
+    border: $test;
+    width: 710px;
+    height: 610px;
+    margin: 20px;
 } 
 
 #projects, #todos {
-    border: $test;
+
 } #projects {
-    
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 } #todos {
-    height: 100%;
+    max-height: 100%;
+    
+    // display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    // gap: 15px;
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    } 
+    
     overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    // overflow: hidden;
+    // &:hover {
+    //     overflow-y: auto;
+    // }
 }
 
 .project {
-
+    border: 1px solid gray;
+    h2 {
+        font-weight: normal;
+    } small {
+        &:first-of-type {
+            font-weight: bold;
+            &::after {
+                content: ' / ';
+            }
+        }
+    }
 }
 
 .todo {
+    border: 1px solid lightgray;
+    h2 {
 
+    } p {
+        margin-bottom: 10px;
+    }
 }
 
 .tasklist {
     
 }
 
+.task {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    margin-bottom: 5px;
+}
+
+
+
 .card {
     // logic for a todo that is in card view
+    float: left;
+    margin-bottom: 15px;
+} .card-sizer {
+
+} .card, .card-sizer {
+    width: calc(33.3% - 10px);
 }
 
 .expanded {
     // logic for a todo that is in expanded view
 }
+

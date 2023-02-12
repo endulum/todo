@@ -22,7 +22,7 @@ books.add(Task('The Tragedy of Hamlet'));
 books.add(Task('The Silmarillion'));
 
 let movies = Todo('Movies to Watch', 1, undefined, 'Totally cool movies I want to watch.');
-movies.add('Avengers: Infinity War');
+movies.add(Task('Avengers: Infinity War'));
 
 let hobbies = Project('Personal Hobbies');
 hobbies.add(recipes);
