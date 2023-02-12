@@ -4,3 +4,6 @@ import './style.scss';
 import { Task, Todo, Project } from './logic/core.js';
 import { hobbies, familiars } from './logic/dummy.js';
 
+// iifes
+import { Startup } from './display';
+
