@@ -39,7 +39,7 @@ aside, main {
     flex-direction: column;
     gap: 15px;
 } #todos {
-    max-height: 100%;
+    height: 100%!important;
     
     // display: grid;
     // grid-template-columns: repeat(3, 1fr);

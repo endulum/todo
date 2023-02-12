@@ -29,7 +29,6 @@ hobbies.add(recipes);
 hobbies.add(art);
 hobbies.add(books);
 hobbies.add(movies);
-hobbies.add(recipes);
 
 let fams1 = Todo('Basic Hippalectryon', 2, undefined, 'It\'s not unheard of for dryads to form alliances with nature dragon clans.');
 fams1.add(Task('One would think it would be blind to what\'s behind it.'));

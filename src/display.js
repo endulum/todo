@@ -1,4 +1,5 @@
 import Masonry from "masonry-layout";
+import { Task, Todo, Project } from "./logic/core";
 
 // functions for ease of DOM manip
 
@@ -40,8 +41,8 @@ export const App = (() => {
 
     const projects = [];
 
-    const currentProjectViewing = '';
-    const currentTodoViewing = '';
+    let currentProjectViewing = '';
+    let currentTodoViewing = 'startup';
 
     const add = function(project) {
         projects.push(project);
@@ -67,57 +68,26 @@ export const App = (() => {
     }
 
     const refreshTodoView = project => {
-        if (App.currentProjectViewing != project.title) {
+        if (App.currentProjectViewing != project.title || currentTodoViewing != '') {
             App.currentProjectViewing = project.title;
-            makeCardsFor(project);
+            cardView(project);
         }
     }
 
-    const makeCardsFor = project => {
+    const cardView = project => {
         // quick empty
         Foundation.todoView.innerHTML = '';
+
         // add sizer to make Masonry work
         let sizer = create('div', Foundation.todoView, 'class', 'card-sizer', undefined);
 
+        // add listener - on click, expand the card
         for (let todo of project.todos) {
-            // create top-level elements
-            const card = create('div', Foundation.todoView, 'class', 'todo', undefined);
-            card.classList.add('card')
-            const title = create('h2', card, undefined, undefined, todo.title);
-            const priority = create('div', title, 'class', todo.priority, undefined);
-            const due = create ('p', card, undefined, undefined, todo.due);
-            if (todo.due != 'No due date') {
-                due.appendChild(document.createElement('br'));
-                const distance = create('small', due, undefined, undefined, todo.distance);
-            }
-            const description = create('p', card, undefined, undefined, todo.description);
-            const tasks = create('ul', card, 'class', 'tasklist', undefined);
-            // create tasklist
-            for (let t of todo.tasks) {
-                let task = create('li', tasks, 'class', 'task', undefined);
-                let check = create('input', task, undefined, undefined, undefined);
-                check.setAttribute('type', 'checkbox');
-                let description = create('div', task, undefined, undefined, t.description);
-                // fills in anything already done
-                if (t.done) check.checked = true;
-                // add listener - on click, mark the Task object as done
-                check.addEventListener('click', markTask.bind(App, t));
-            }
+            renderTodo(todo, 'card').addEventListener('click', expandView.bind(App, todo));
         }
 
         // Masonry magic
         invokeMasonry();
-
-
-        // if (Foundation.todoView.className != 'grid') {
-        //     Foundation.todoView.className = 'grid';
-        //     gridView();
-        // }
-    }
-
-    const markTask = task => {
-        task.toggle();
-        refreshProjectView();
     }
 
     const invokeMasonry = () => {
@@ -130,15 +100,68 @@ export const App = (() => {
         })
     }
 
-    // const gridView = () => {
-    //     let grid = document.querySelector('#todos');
-    //     let msnry;
-    //     msnry = new Masonry( grid, {
-    //         itemSelector: '.todo',
-    //         columnWidth: '.todo',
-    //         percentPosition: true
-    //     });
-    // }
+    const expandView = (todo) => {
+        // quick empty
+        Foundation.todoView.innerHTML = '';
+
+        currentTodoViewing = todo.title;
+        renderTodo(todo, 'expand');
+    }
+
+    const markTask = task => {
+        task.toggle();
+        refreshProjectView();
+    }
+
+    const renderTodo = (todo, viewType) => {
+        // create top-level elements
+        const card = create('div', Foundation.todoView, 'class', 'todo', undefined);
+        const title = create('h2', card, undefined, undefined, todo.title);
+        const priority = create('div', title, 'class', todo.priority, undefined);
+        const due = create ('p', card, undefined, undefined, todo.due);
+        if (todo.due != 'No due date') {
+            due.appendChild(document.createElement('br'));
+            const distance = create('small', due, undefined, undefined, todo.distance);
+        }
+        const description = create('p', card, undefined, undefined, todo.description);
+        const tasks = create('ul', card, 'class', 'tasklist', undefined);
+
+        // create tasklist
+        for (let t of todo.tasks) {
+            createTaskCheck(t, tasks);
+        }
+
+        switch (viewType) {
+            case 'card': 
+                card.classList.add('card');
+                return title;
+            case 'expand':
+                console.log('an input is added...');
+                card.classList.add('expanded');
+                let addTaskInput = create('input', card, undefined, undefined, undefined);
+                addTaskInput.setAttribute('type', 'text');
+                addTaskInput.setAttribute('placeholder', 'Add new task here...');
+                addTaskInput.required = true;
+                let submitTaskInput = create('button', card, undefined, undefined, "Submit");
+                submitTaskInput.addEventListener('click', () => {
+                    let newTask = Task(addTaskInput.value);
+                    todo.add(newTask);
+                    createTaskCheck(newTask, tasks);
+                    refreshProjectView();
+                });
+        }
+    }
+
+    const createTaskCheck = (t, taskList) => {
+        let task = create('li', taskList, 'class', 'task', undefined);
+        let check = create('input', task, undefined, undefined, undefined);
+        check.setAttribute('type', 'checkbox');
+        let description = create('div', task, undefined, undefined, t.description);
+        // fills in anything already done
+        if (t.done) check.checked = true;
+        // add listener - on click, mark the Task object as done
+        check.addEventListener('click', markTask.bind(App, t));
+    }
 
     return { add, remove };
 })();
