@@ -67,7 +67,9 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
             }
             for (let task of tasks) {
                 counter++;
-                list += `${counter}. ${task.description}\n`;
+                list += `${counter}. ${task.description}`;
+                if (task.done) list += ` (done!)`;
+                list += `\n`
             }
             list += `\n${counter} tasks total`;
             return list;
