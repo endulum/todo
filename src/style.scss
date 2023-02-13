@@ -70,6 +70,9 @@ aside, main {
     border: 1px solid gray;
     h2 {
         font-weight: normal;
+        &:hover {
+            cursor: pointer;
+        }
     } small {
         &:first-of-type {
             font-weight: bold;
