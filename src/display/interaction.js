@@ -25,7 +25,8 @@ const Display = ((projectView, todoView) => {
         const titleText = create('span', title, null, null, todo.title);
         const priority = create('div', title, 'class', todo.priority, null);
 
-        const due = create ('p', card, null, null, todo.due);
+        const due = create('p', card, null, null, null);
+        const dueText = create('span', due, null, null, todo.due);
         if (todo.due != 'No due date') {
             due.appendChild(document.createElement('br'));
             const distance = create('small', due, null, null, todo.distance);
@@ -44,17 +45,50 @@ const Display = ((projectView, todoView) => {
 
             // this is sooooo not solid-compliant
             const titleEdit = create('button', title, null, null, 'Edit Title');
-            titleEdit.addEventListener('click', () => {
-                const titleEditField = create('input', null, null, null, null);
-                const titleEditSubmit = create('button', null, null, null, 'Submit');
-                title.replaceChild(titleEditSubmit, titleEdit);
-                title.replaceChild(titleEditField, titleText);
+            titleEdit.addEventListener('click', generateEditButtons.bind(Display, todo, 'title', title, titleText, titleEdit));
 
-                titleEditSubmit.addEventListener('click', () => {
-                    App.changeTodoTitle(todo, titleEditField.value);
-                });
-            });
+            const dueEdit = create('button', null, null, null, 'Edit Due Date');
+            dueText.parentNode.insertBefore(dueEdit, dueText.nextSibling);
+            dueEdit.addEventListener('click', generateEditButtons.bind(Display, todo, 'date', due, dueText, dueEdit));
         }
+    }
+
+    const generateEditButtons = (todo, detailType, parentNode, textToEdit, editButton) => {
+        let defaultValue;
+        let submittedValue;
+
+        const editField = create('input', null, null, null, null);
+        const editSubmit = create('button', null, null, null, 'Submit');
+
+        parentNode.replaceChild(editSubmit, editButton);
+        parentNode.replaceChild(editField, textToEdit);
+
+        switch (detailType) {
+            case 'title':
+                defaultValue = todo.title;
+                editField.setAttribute('type', 'text');
+                editField.setAttribute('placeholder', todo.title);
+                break;
+            case 'date':
+                defaultValue = 0;
+                editField.setAttribute('type', 'date');
+                break;
+        }
+
+        editSubmit.addEventListener('click', () => {
+            if (editField.value == '') {
+                App.changeTodoDetail(todo, detailType, defaultValue);
+            } else {
+                switch (detailType) {
+                    case 'title':
+                        App.changeTodoDetail(todo, 'title', editField.value.toString());
+                        break;
+                    case 'date':
+                        App.changeTodoDetail(todo, 'date', editField.valueAsDate);
+                        break;
+                }
+            }
+        });
     }
 
     const generateTaskList = (todo, cardNode) => {
@@ -117,8 +151,11 @@ export const App = (() => {
         todoInFocus = todo.title;
     }
 
-    const changeTodoTitle = (todo, newTitle) => {
-        todo.title = newTitle;
+    const changeTodoDetail = (todo, detailType, newDetail) => {
+        switch (detailType) {
+            case 'title': todo.title = newDetail; break;
+            case 'date': todo.due = newDetail; break;
+        }
         expandTodo(todo);
         console.log(todo.print());
     }
@@ -198,6 +235,6 @@ export const App = (() => {
     // return { add, remove };
     return {
         refreshProjectView,
-        changeTodoTitle
+        changeTodoDetail
     };
 })();
