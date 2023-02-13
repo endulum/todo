@@ -14,9 +14,14 @@ const Display = ((projectView, todoView) => {
         const projectCard = create('div', projectView, null);
         projectCard.classList.add('project');
 
-        const title = create('h2', projectCard, project.title);
+        const title = create('h3', projectCard, project.title);
         const totalTodos = create('small', projectCard, `${project.total} todos`);
         const totalTasks = create('small', projectCard,`${project.totalTasksComplete} out of ${project.totalTasks} total items complete`);
+
+        title.addEventListener('click', () => {
+            App.refreshProjectView();
+            App.refreshTodoView(project);
+        });
 
         return title;
     }
@@ -98,7 +103,7 @@ const Display = ((projectView, todoView) => {
                 break;
             case 'desc':
                 defaultValue = todo.description;
-                editField.setAttribute('placeholder', todo.title);
+                editField.setAttribute('placeholder', todo.description);
         }
 
         editSubmit.addEventListener('click', () => {
@@ -143,7 +148,7 @@ const Display = ((projectView, todoView) => {
     }
 
     const generateTask = (taskList, todo, t) => {
-        
+
         let task = create('li', taskList, null);
         task.classList.add('task');
         
@@ -185,8 +190,8 @@ export const App = (() => {
     const refreshProjectView = () => {
         Display.emptyProjectView();
         for (let p of projects) {
-            let title = Display.generateProjectCard(p);
-            title.addEventListener('click', refreshTodoView.bind(App, p));
+            Display.generateProjectCard(p);
+            // title.addEventListener('click', refreshTodoView.bind(App, p));
         }
     }
 
@@ -235,6 +240,7 @@ export const App = (() => {
 
     return {
         refreshProjectView,
+        refreshTodoView,
         changeTodoDetail,
         toggleTask,
         removeTask,

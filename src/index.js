@@ -4,7 +4,10 @@ import './style.scss';
 import { Task, Todo, Project } from './logic/core.js';
 import { hobbies, familiars } from './logic/dummy.js';
 
-// app startup
-import { App } from './display/interaction';
+// // app startup
+// import { App } from './display/interaction';
 
-App.refreshProjectView();
+// App.refreshProjectView();
+
+import { Management } from './display/app';
+Management.refreshProjects();

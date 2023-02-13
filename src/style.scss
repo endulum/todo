@@ -73,14 +73,17 @@ aside, main {
         &:hover {
             cursor: pointer;
         }
-    } small {
-        &:first-of-type {
+    } div {
+        display: none;
+        small:first-of-type {
             font-weight: bold;
             &::after {
                 content: ' / ';
-            }
+            }  
         }
     }
+} .project.active div {
+    display: block;
 }
 
 .todo {
