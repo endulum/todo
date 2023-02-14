@@ -100,8 +100,8 @@ export const Project = title => {
         },
 
         // editions to the todolist
-        add: todo => todos.push(todo),
-        remove: number => todos.splice(number - 1, 1),
+        add: todo => todos.unshift(todo),
+        remove: index => todos.splice(index, 1),
 
         // setters
         set title(text) {title = text.toString()},

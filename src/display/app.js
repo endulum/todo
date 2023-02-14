@@ -45,6 +45,19 @@ export const Management = (() => {
         GUI.updateProjectStats(projectInFocus);
         return task;
     }
+    // todo addition and removal
+    const addTodo = () => {
+        let newTodo = Todo('New Todo', 'none', undefined, 'Description')
+        newTodo.add(Task('Task'));
+        projectInFocus.add(newTodo);
+        console.log(projectInFocus.print());
+        refreshTodos(projectInFocus);
+    }
+    const removeTodo = index => {
+        projectInFocus.remove(index);
+        console.log(projectInFocus.print());
+        refreshTodos(projectInFocus);
+    }
 
     return {
         projectInFocus,
@@ -53,7 +66,9 @@ export const Management = (() => {
         changeTodoDetail,
         toggleTask,
         removeTask,
-        addTask
+        addTask,
+        addTodo,
+        removeTodo
     }
 })();
 
@@ -67,11 +82,11 @@ const GUI = ((projectView, todoView) => {
         for (let project of projects) makeProjectLink(project);
     }
     // regenerate todo overview as needed
-    const regenerateTodoView = (project, viewType) => {
+    const regenerateTodoView = (project) => {
         emptyTodoView();
         makeProjectHeader(project);
         for (let t of project.todos) {
-            makeTodoCard(t);
+            makeTodoCard(t, project.todos.indexOf(t));
         }
     }
     // make each individual project link
@@ -105,11 +120,14 @@ const GUI = ((projectView, todoView) => {
             }
         }
     }
+    // make header with controls, above the todo listing
     const makeProjectHeader = project => {
         create('h1', todoView, project.title);
+        let addTodo = create('button', todoView, 'Add a Todo');
+        addTodo.addEventListener('click', Management.addTodo);
     }
     // make individual todo cards
-    const makeTodoCard = todo => {
+    const makeTodoCard = (todo, index) => {
         const card = create('div', todoView, null);
         card.classList.add('todo');
         // make edit buttons for each aspect of the todo
@@ -120,6 +138,8 @@ const GUI = ((projectView, todoView) => {
         const desc = makeEditable(card, 'todo-description', todo.description, 'desc');
         desc.addEventListener('click', performEdit.bind(GUI, desc.parentNode, 'desc', todo));
         generateTaskList(todo, card);
+        const deleteTodo = create('button', card, 'Delete Todo');
+        deleteTodo.addEventListener('click', Management.removeTodo.bind(Management, index));
     }
     // add edit pencils to each aspect of the todo
     const makeEditable = (cardNode, className, todoDetail, detailType) => {
