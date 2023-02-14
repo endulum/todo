@@ -30,13 +30,30 @@ export const Management = (() => {
             case 'desc': todo.description = newDetail; break;
         }
         refreshTodos(projectInFocus);
-        console.log(todo.print());
+    }
+    // task editing
+    const toggleTask = (task) => {
+        task.toggle();
+        GUI.updateProjectStats(projectInFocus);
+    }
+    const removeTask = (todo, index) => {
+        todo.remove(index + 1);
+        GUI.updateProjectStats(projectInFocus);
+    }
+    const addTask = (todo, task) => {
+        todo.add(task);
+        GUI.updateProjectStats(projectInFocus);
+        return task;
     }
 
     return {
+        projectInFocus,
         refreshProjects,
         refreshTodos,
-        changeTodoDetail
+        changeTodoDetail,
+        toggleTask,
+        removeTask,
+        addTask
     }
 })();
 
@@ -52,6 +69,7 @@ const GUI = ((projectView, todoView) => {
     // regenerate todo overview as needed
     const regenerateTodoView = (project, viewType) => {
         emptyTodoView();
+        makeProjectHeader(project);
         for (let t of project.todos) {
             makeTodoCard(t);
         }
@@ -71,6 +89,13 @@ const GUI = ((projectView, todoView) => {
             Management.refreshTodos(project);
         });
     }
+    // live changes to the actively viewed project card
+    const updateProjectStats = (p) => {
+        let node = $('.project.active');
+        node.querySelector('h3').textContent = p.title;
+        node.querySelector('small:first-child').textContent = `${p.todos.length} todos`;
+        node.querySelector('small:last-child').textContent = `${p.totalTasksComplete} out of ${p.totalTasks} total items complete`;
+    }
     // change styling for the project currently being viewed
     const setActiveProject = (projects, projectInFocus) => {
         regenerateProjectView(projects);
@@ -79,6 +104,9 @@ const GUI = ((projectView, todoView) => {
                 projectNode.classList.add('active');
             }
         }
+    }
+    const makeProjectHeader = project => {
+        create('h1', todoView, project.title);
     }
     // make individual todo cards
     const makeTodoCard = todo => {
@@ -91,6 +119,7 @@ const GUI = ((projectView, todoView) => {
         due.addEventListener('click', performEdit.bind(GUI, due.parentNode, 'due', todo));
         const desc = makeEditable(card, 'todo-description', todo.description, 'desc');
         desc.addEventListener('click', performEdit.bind(GUI, desc.parentNode, 'desc', todo));
+        generateTaskList(todo, card);
     }
     // add edit pencils to each aspect of the todo
     const makeEditable = (cardNode, className, todoDetail, detailType) => {
@@ -114,7 +143,6 @@ const GUI = ((projectView, todoView) => {
         const editSubmit = create('button', null, 'Submit');
         parentNode.replaceChild(editSubmit, edit);
         parentNode.replaceChild(editField, text);
-
         let defaultValue;
         switch (detailType) {
             case 'title':
@@ -128,7 +156,6 @@ const GUI = ((projectView, todoView) => {
                 defaultValue = todo.description;
                 editField.setAttribute('placeholder', todo.description); break;
         }
-
         editSubmit.addEventListener('click', () => {
             if (editField.value == '') {
                 Management.changeTodoDetail(todo, detailType, defaultValue);
@@ -144,10 +171,44 @@ const GUI = ((projectView, todoView) => {
             }
         });
     }
+    // renders a list of tasks for each todo
+    const generateTaskList = (todo, cardNode) => {
+        const tasks = create('ul', cardNode, null);
+        tasks.classList.add('tasklist');
+        for (let t of todo.tasks) {
+            generateTask(tasks, todo, t);
+        }
+        let addInput = create('input', cardNode, null);
+        addInput.setAttribute('type', 'text');
+        addInput.setAttribute('placeholder', 'Add new item...');
+        let addSubmit = create('button', cardNode, 'Submit');
+        addSubmit.addEventListener('click', () => {
+            let newTask = Management.addTask(todo, Task(addInput.value.toString()));
+            generateTask(tasks, todo, newTask);
+        });
+    }
+    // renders individual tasks
+    const generateTask = (taskList, todo, t) => {
+        let task = create('li', taskList, null);
+        task.classList.add('task');
+        let check = create('input', task, null);
+        check.setAttribute('type', 'checkbox');
+        if (t.done) check.checked = true;
+        check.addEventListener('click', () => {
+            Management.toggleTask(t);
+        });
+        let description = create('div', task, t.description);
+        let remove = create('button', task, 'Remove');
+        remove.addEventListener('click', () => {
+            Management.removeTask(todo, todo.tasks.indexOf(t));
+            taskList.removeChild(task);
+        });
+    }
 
     return {
         regenerateProjectView,
         regenerateTodoView,
-        setActiveProject
+        setActiveProject, 
+        updateProjectStats
     }
 })(Base.projectView, Base.todoView)
