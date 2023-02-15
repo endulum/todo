@@ -58,6 +58,12 @@ export const Management = (() => {
         console.log(projectInFocus.print());
         refreshTodos(projectInFocus);
     }
+    // project addition and removal
+    const addProject = () => {
+        let newProject = Project(`New Project`);
+        projects.push(newProject);
+        refreshProjects();
+    }
 
     return {
         projectInFocus,
@@ -68,7 +74,8 @@ export const Management = (() => {
         removeTask,
         addTask,
         addTodo,
-        removeTodo
+        removeTodo,
+        addProject
     }
 })();
 
@@ -79,7 +86,11 @@ const GUI = ((projectView, todoView) => {
     // regenerate project view as needed
     const regenerateProjectView = projects => {
         emptyProjectView();
-        for (let project of projects) makeProjectLink(project);
+        if (projects.length > 0) {
+            for (let project of projects) makeProjectLink(project);
+        }
+        const addProject = create('button', projectView, 'Add a Project');
+        addProject.addEventListener('click', Management.addProject);
     }
     // regenerate todo overview as needed
     const regenerateTodoView = (project) => {
@@ -114,9 +125,10 @@ const GUI = ((projectView, todoView) => {
     // change styling for the project currently being viewed
     const setActiveProject = (projects, projectInFocus) => {
         regenerateProjectView(projects);
-        for (let projectNode of projectView.childNodes) {
-            if (projectNode.firstChild.textContent == projectInFocus.title) {
-                projectNode.classList.add('active');
+        let nodes = Array.from(projectView.childNodes)
+        for (let node of nodes) {
+            if (nodes.indexOf(node) == projects.indexOf(projectInFocus)) {
+                node.classList.add('active');
             }
         }
     }
