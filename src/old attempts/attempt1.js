@@ -64,9 +64,15 @@ export const Management = (() => {
         projects.push(newProject);
         refreshProjects();
     }
-
+    // priority edition
+    const setPriority = (todo, p) => {
+        todo.priority = p;
+        refreshTodos(projectInFocus);
+        console.log(todo.print());
+    }
     return {
         projectInFocus,
+        todoInFocus,
         refreshProjects,
         refreshTodos,
         changeTodoDetail,
@@ -75,7 +81,8 @@ export const Management = (() => {
         addTask,
         addTodo,
         removeTodo,
-        addProject
+        addProject,
+        setPriority
     }
 })();
 
@@ -152,9 +159,27 @@ const GUI = ((projectView, todoView) => {
         generateTaskList(todo, card);
         const deleteTodo = create('button', card, 'Delete Todo');
         deleteTodo.addEventListener('click', Management.removeTodo.bind(Management, index));
+        const setPriority = create('div', card, null);
+        const priority = create('div', setPriority, null);
+        priority.classList.add('priority');
+        priority.addEventListener('click', () => {
+            priority.innerHTML = '';
+            for (let p = 0; p < 4; p++) {
+                const btn = create('div', priority, null);
+                let className;
+                switch (p) {
+                    case 0: className = 'none'; break;
+                    case 1: className = 'low'; break;
+                    case 2: className = 'medium'; break;
+                    case 3: className = 'high'; break;
+                }
+                btn.classList.add(className);
+                btn.addEventListener('click', Management.setPriority.bind(Management, todo, p));
+            }
+        });
     }
     // add edit pencils to each aspect of the todo
-    const makeEditable = (cardNode, className, todoDetail, detailType) => {
+    const makeEditable = (cardNode, className, todoDetail) => {
         const editable = create('div', cardNode, null);
         editable.classList.add(className);
         const text = create('span', editable, todoDetail);

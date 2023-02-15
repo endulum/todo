@@ -10,7 +10,6 @@ export const create = (elementType, parentNode, textContent) => {
 
 // loads up body
 export const Base = (db => {
-    console.warn('Invoking Foundation');
     const sidebar = create('aside', db, null);
     const content = create('main', db, null);
 

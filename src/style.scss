@@ -123,5 +123,20 @@ aside, main {
     // logic for a todo that is in expanded view
 }
 
+.priority {
+    border: $test;
+    padding: 10px;
+}
 
-.low, .medium, .high, .none {display: none;}
+.low, .medium, .high, .none {
+    background-color: gray;
+    width: fit-content;
+} .low::after {
+    content: 'low';
+} .medium::after {
+    content: 'medium';
+} .high::after {
+    content: 'high';
+} .none::after {
+    content: 'no priority';
+}

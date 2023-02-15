@@ -9,8 +9,11 @@ export const Task = (description, done = false) => {
     }
 }
 
-export const Todo = (title, priority = 'none', due = 0, description = '') => {
+export const Todo = title => {
     const tasks = [];
+    let priority = 'none';
+    let due = 0;
+    let description = '';
     return {
         // basic getters
         get tasks() {return tasks},
@@ -39,15 +42,22 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
         add: task => tasks.push(task),
         remove: number => tasks.splice(number - 1, 1),
 
+        // find index of a task based on description
+        index: description => {
+            return tasks.findIndex(d => d.description = description);
+        },
+
         // setters for the details
         set title(text) {title = text.toString()},
-        set priority(number) {
-            switch (number) {
-                case 1: priority = 'low'; break;
-                case 2: priority = 'medium'; break;
-                case 3: priority = 'high'; break;
-                default: priority = 'none'; break;
-            }
+        set priority(p) {
+            if (typeof p == 'number') {
+                switch (number) {
+                    case 1: priority = 'low'; break;
+                    case 2: priority = 'medium'; break;
+                    case 3: priority = 'high'; break;
+                    default: priority = 'none'; break;
+                }
+            } else {priority = p.toString()};
         },
         set due(date) {
             if ((typeof date == 'object')) {due = date}
@@ -97,6 +107,11 @@ export const Project = title => {
             for (let todo of todos) {
                 counter += todo.totalComplete;
             } return counter;
+        },
+
+        // find index of a todo based on title
+        index: title => {
+            return todos.findIndex(t => t.title = title);
         },
 
         // editions to the todolist
