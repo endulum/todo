@@ -2,6 +2,8 @@ import { Task, Todo, Project } from './core.js';
 
 // sample content to develop ui with
 
+// real life todos
+
 let recipes = Todo('Recipes to Try', 'low', undefined, 'Random and interesting recipes I found around the internet.');
 recipes.add(Task('Shrimp fried rice'));
 recipes.add(Task('Chicken noodle soup'));
@@ -21,14 +23,12 @@ books.add(Task('The Great Gatsby'));
 books.add(Task('The Tragedy of Hamlet'));
 books.add(Task('The Silmarillion'));
 
-let movies = Todo('Movies to Watch', 'low', undefined, 'Totally cool movies I want to watch.');
-movies.add(Task('Avengers: Infinity War'));
-
 let hobbies = Project('Personal Hobbies');
 hobbies.add(recipes);
 hobbies.add(art);
 hobbies.add(books);
-hobbies.add(movies);
+
+// this is nonsense text to emulate real text without use of lorem ipsum gibberish
 
 let fams1 = Todo('Basic Hippalectryon', 'medium', undefined, 'It\'s not unheard of for dryads to form alliances with nature dragon clans.');
 fams1.add(Task('One would think it would be blind to what\'s behind it.'));

@@ -1,19 +1,17 @@
 import {format, formatDistanceToNow} from 'date-fns';
 
-export const Task = (description, done = false) => {
+export const Task = (desc, done = false) => {
     return {
-        get description() {return description},
+        get desc() {return desc},
         get done() {return done},
+        set desc(text) {desc = text.toString()},
         toggle: () => done = !done,
-        edit: text => description = text,
+        edit: text => desc = text,
     }
 }
 
-export const Todo = title => {
+export const Todo = (title, priority = 'none', due = 0, description = '') => {
     const tasks = [];
-    let priority = 'none';
-    let due = 0;
-    let description = '';
     return {
         // basic getters
         get tasks() {return tasks},
