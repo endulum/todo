@@ -4,7 +4,26 @@ import { Task, Todo, Project } from "../logic/core";
 
 export const CONTROL = (() => {
 
-    const projects = [];
+    let projects = [];
+
+    const refreshStorage = () => {
+        console.log('Focusing on ' + projectInFocus.title);
+        let preserve = JSON.stringify(projects);
+        localStorage.clear();
+        localStorage.setItem('projects', preserve);
+        console.log(localStorage);
+        console.log('Focusing on ' + projectInFocus.title);
+    }
+
+    const initializeStorage = () => {
+        // debugger;
+        if (JSON.parse(localStorage.getItem('projects')) != null) {
+            projects = JSON.parse(localStorage.getItem('projects'));
+            console.log(projects);
+        }
+        renderProjects();
+        console.log(localStorage);
+    };
 
     const add = project => {
         projects.push(project);
@@ -21,6 +40,7 @@ export const CONTROL = (() => {
 
     // renders the project view
     const renderProjects = () => {
+        refreshStorage();
         VIEW.renderProjects(projects);
         projectInFocus = '';
         VIEW.renderSplash();
@@ -50,6 +70,7 @@ export const CONTROL = (() => {
         taskInFocus = '';
         VIEW.setActiveProject(projects, projectInFocus);
         VIEW.renderTodos(projectInFocus);
+        refreshStorage();
     }
 
     // renders a todo in isolation
@@ -59,6 +80,7 @@ export const CONTROL = (() => {
         }
         taskInFocus = '';
         VIEW.renderIsolatedTodo(todoInFocus, projectInFocus.todos.indexOf(todo));
+        refreshStorage();
     }
 
     // helper to set a task in focus
@@ -105,6 +127,7 @@ export const CONTROL = (() => {
         renderIsolatedTodo(todoInFocus);
     }
     const addTodo = () => {
+        console.log('Focusing on ' + projectInFocus.title);
         let newTodo = Todo('New Todo', 'none', undefined, 'Add a description...');
         projectInFocus.add(newTodo);
         VIEW.updateProjectStats(projectInFocus);
@@ -127,7 +150,9 @@ export const CONTROL = (() => {
         // todo management
         changeTodoTitle, changeTodoDue, changeTodoPriority, changeTodoDescription, addTodo, removeTodo, getTodoIndex,
         // project management
-        renderProjects, deleteProject, addProject
+        renderProjects, deleteProject, addProject,
+        // storage
+        initializeStorage
     }
 })();
 

@@ -7,4 +7,5 @@ import { Base } from './display/base';
 
 import { VIEW, CONTROL } from './display/gui';
 
-CONTROL.renderProjects();
+/////////
+CONTROL.initializeStorage();
