@@ -8,4 +8,5 @@ import { Base } from './display/base';
 import { VIEW, CONTROL } from './display/gui';
 
 /////////
+// localStorage.clear();
 CONTROL.initializeStorage();

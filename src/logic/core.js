@@ -18,8 +18,12 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
         get title() {return title},
         get priority() {return priority},
         get due() {
-            if (due != 0) return `due on ${format(due, 'MMMM d, yyyy')}`;
-            else return 'no due date';
+            if (due === 0) {return 0}
+            else if (typeof due === 'object') {return due};
+            // if (due != 0) return `due on ${format(due, 'MMMM d, yyyy')}`;
+            // else if (due === 0) return 'no due date';
+            // else if (due === 'no due date') return 0;
+            // else return `due on ${format(parseISO(due), 'MMMM d, yyyy')}`;
         },
         get distance() {
             if (due != 0) return formatDistanceToNow(due, {addSuffix: true});
@@ -113,7 +117,7 @@ export const Project = title => {
         },
 
         // editions to the todolist
-        add: todo => todos.unshift(todo),
+        add: todo => todos.push(todo),
         remove: index => todos.splice(index, 1),
 
         // setters

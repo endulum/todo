@@ -7,22 +7,31 @@ export const CONTROL = (() => {
     let projects = [];
 
     const refreshStorage = () => {
-        console.log('Focusing on ' + projectInFocus.title);
-        let preserve = JSON.stringify(projects);
+        // console.log('Focusing on ' + projectInFocus.title);
         localStorage.clear();
-        localStorage.setItem('projects', preserve);
+        localStorage.setItem('projects', JSON.stringify(projects));
         console.log(localStorage);
-        console.log('Focusing on ' + projectInFocus.title);
+        // console.log('Focusing on ' + projectInFocus.title);
     }
 
     const initializeStorage = () => {
-        // debugger;
         if (JSON.parse(localStorage.getItem('projects')) != null) {
-            projects = JSON.parse(localStorage.getItem('projects'));
-            console.log(projects);
+            const tempProjects = JSON.parse(localStorage.getItem('projects'));
+            console.log(tempProjects);
+            for (let project of tempProjects) {
+                const tempProject = Project(project.title);
+                for (let todo of project.todos) {
+                    console.log(todo.due);
+                    console.log(typeof todo.due);
+                    const tempTodo = Todo(todo.title, todo.priority, todo.due, todo.description);
+                    for (let task of todo.tasks) {
+                        const tempTask = Task(task.desc, task.done);
+                        tempTodo.add(tempTask);
+                    } tempProject.add(tempTodo);
+                } projects.push(tempProject);
+            }
         }
         renderProjects();
-        console.log(localStorage);
     };
 
     const add = project => {
@@ -107,6 +116,7 @@ export const CONTROL = (() => {
     const toggleTask = task => {
         task.toggle();
         VIEW.updateProjectStats(projectInFocus);
+        refreshStorage();
     }
 
     // addition, removal, and management of todos
@@ -127,7 +137,7 @@ export const CONTROL = (() => {
         renderIsolatedTodo(todoInFocus);
     }
     const addTodo = () => {
-        console.log('Focusing on ' + projectInFocus.title);
+        // console.log('Focusing on ' + projectInFocus.title);
         let newTodo = Todo('New Todo', 'none', undefined, 'Add a description...');
         projectInFocus.add(newTodo);
         VIEW.updateProjectStats(projectInFocus);
