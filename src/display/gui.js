@@ -1,6 +1,7 @@
 import { Base, create, $ } from "./base";
 import { hobbies, familiars } from "../logic/dummy";
 import { Task, Todo, Project } from "../logic/core";
+import {format, formatDistanceToNow} from 'date-fns';
 
 export const CONTROL = (() => {
 
@@ -21,9 +22,10 @@ export const CONTROL = (() => {
             for (let project of tempProjects) {
                 const tempProject = Project(project.title);
                 for (let todo of project.todos) {
-                    console.log(todo.due);
-                    console.log(typeof todo.due);
-                    const tempTodo = Todo(todo.title, todo.priority, todo.due, todo.description);
+                    let tempDue;
+                    if (todo.due == 0) {tempDue = todo.due}
+                    else if (typeof todo.due == 'string') {tempDue = new Date(todo.due)}
+                    const tempTodo = Todo(todo.title, todo.priority, tempDue, todo.description);
                     for (let task of todo.tasks) {
                         const tempTask = Task(task.desc, task.done);
                         tempTodo.add(tempTask);
@@ -264,13 +266,24 @@ export const VIEW = ((projectView, todoView) => {
     }
 
     const renderTodo = todo => {
+        console.log(todo);
+        console.log(todo.due);
+        console.log(typeof todo.due);
+        // to determine due text 
+        let dueText;
+        let distance;
+        if (todo.due === 0) {
+            dueText = 'no due date';
+        } else if (typeof todo.due === 'object') {
+            dueText = format(todo.due, 'MMMM d, yyyy');
+        }
         // parent node
         const todoCard = create('div', null, null);
         todoCard.className = 'todo card';
         // rendering details
         create('h2', todoCard, todo.title).className = 'title'
-        create('p', todoCard, todo.due).className = 'due';
-        if (todo.due != 'no due date') create('small', todoCard, todo.distance);
+        create('p', todoCard, dueText).className = 'due';
+        if (dueText != 'no due date') create('small', todoCard, formatDistanceToNow(todo.due, {addSuffix: true}));
         create('div', todoCard, todo.priority).className = 'priority';
         create('p', todoCard, todo.description).className = 'description';
         // rendering checklist
@@ -333,7 +346,7 @@ export const VIEW = ((projectView, todoView) => {
         isolatedTodo.dataset.index = index;
         isolatedTodo.append(
             makeEditable(todo.title, 'title'),
-            makeEditable(todo.due, 'due'),
+            makeEditable(todo.dueFormatted, 'due'),
             makeEditable(todo.priority, 'priority'),
             makeEditable(todo.description, 'description')
         );
@@ -425,7 +438,7 @@ export const VIEW = ((projectView, todoView) => {
     const performEdit = (field, index) => {
         const type = field.parentNode.className;
         if (index != undefined) CONTROL.setTaskInFocus(index);
-        if (field.value == '') {
+        if (field.value == '' && type != 'due') {
             console.warn('Nothing changed.');
             CONTROL.renderIsolatedTodo();
         } else {
@@ -434,7 +447,11 @@ export const VIEW = ((projectView, todoView) => {
                     CONTROL.changeTodoTitle(field.value.toString());
                     break;
                 case 'due':
-                    CONTROL.changeTodoDue(field.valueAsDate);
+                    if (field.valueAsDate == null) {
+                        CONTROL.changeTodoDue(0);
+                    } else {
+                        CONTROL.changeTodoDue(field.valueAsDate);
+                    }
                     break;
                 case 'priority':
                     CONTROL.changeTodoPriority(field.value);

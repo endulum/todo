@@ -18,6 +18,8 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
         get title() {return title},
         get priority() {return priority},
         get due() {
+            console.log(due);
+            console.log(typeof due);
             if (due === 0) {return 0}
             else if (typeof due === 'object') {return due};
             // if (due != 0) return `due on ${format(due, 'MMMM d, yyyy')}`;
@@ -25,9 +27,13 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
             // else if (due === 'no due date') return 0;
             // else return `due on ${format(parseISO(due), 'MMMM d, yyyy')}`;
         },
-        get distance() {
-            if (due != 0) return formatDistanceToNow(due, {addSuffix: true});
+        get dueFormatted() {
+            if (due === 0) {return 'no due date'}
+            else if (typeof due === 'object') {return `due on ${format(due, 'MMMM d, yyyy')}`}
         },
+        // get distance() {
+        //     if (due != 0) return formatDistanceToNow(due, {addSuffix: true});
+        // },
         get description() {return description},
 
         // further getters
