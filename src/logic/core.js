@@ -18,8 +18,6 @@ export const Todo = (title, priority = 'none', due = 0, description = '') => {
         get title() {return title},
         get priority() {return priority},
         get due() {
-            console.log(due);
-            console.log(typeof due);
             if (due === 0) {return 0}
             else if (typeof due === 'object') {return due};
             // if (due != 0) return `due on ${format(due, 'MMMM d, yyyy')}`;

@@ -8,17 +8,13 @@ export const CONTROL = (() => {
     let projects = [];
 
     const refreshStorage = () => {
-        // console.log('Focusing on ' + projectInFocus.title);
         localStorage.clear();
         localStorage.setItem('projects', JSON.stringify(projects));
-        console.log(localStorage);
-        // console.log('Focusing on ' + projectInFocus.title);
     }
 
     const initializeStorage = () => {
         if (JSON.parse(localStorage.getItem('projects')) != null) {
             const tempProjects = JSON.parse(localStorage.getItem('projects'));
-            console.log(tempProjects);
             for (let project of tempProjects) {
                 const tempProject = Project(project.title);
                 for (let todo of project.todos) {
@@ -139,7 +135,6 @@ export const CONTROL = (() => {
         renderIsolatedTodo(todoInFocus);
     }
     const addTodo = () => {
-        // console.log('Focusing on ' + projectInFocus.title);
         let newTodo = Todo('New Todo', 'none', undefined, 'Add a description...');
         projectInFocus.add(newTodo);
         VIEW.updateProjectStats(projectInFocus);
@@ -201,7 +196,7 @@ export const VIEW = ((projectView, todoView) => {
         const panel = create('div', projectView, null);
         panel.className = 'panel';
         const newProjectInput = create('input', panel, null);
-        newProjectInput.setAttribute('placeholder', 'Title');
+        newProjectInput.setAttribute('placeholder', 'New Project title');
         create('button', panel, 'Add Project').addEventListener('click', () => {
             CONTROL.addProject(newProjectInput.value.toString());
         });
@@ -260,15 +255,14 @@ export const VIEW = ((projectView, todoView) => {
 
     const renderTodoHeader = title => {
         create('h1', todoView, title);
-        create('button', todoView, 'Delete this Project').addEventListener('click', () => {
+        const deletion = create('button', todoView, 'Delete this Project');
+        deletion.className = 'delete-project';
+        deletion.addEventListener('click', () => {
             CONTROL.deleteProject();
         });
     }
 
     const renderTodo = todo => {
-        console.log(todo);
-        console.log(todo.due);
-        console.log(typeof todo.due);
         // to determine due text 
         let dueText;
         let distance;
@@ -284,7 +278,9 @@ export const VIEW = ((projectView, todoView) => {
         create('h2', todoCard, todo.title).className = 'title'
         create('p', todoCard, dueText).className = 'due';
         if (dueText != 'no due date') create('small', todoCard, formatDistanceToNow(todo.due, {addSuffix: true}));
-        create('div', todoCard, todo.priority).className = 'priority';
+        let priority = create('div', todoCard, todo.priority);
+        priority.className = 'priority';
+        priority.classList.add(todo.priority);
         create('p', todoCard, todo.description).className = 'description';
         // rendering checklist
         const list = makeTaskList(todo)
@@ -379,7 +375,11 @@ export const VIEW = ((projectView, todoView) => {
     const makeEditable = (todoDetail, detailType) => {
         const editable = create('div', null, null);
         editable.classList.add(detailType);
-        create('span', editable, todoDetail);
+        let detail = create('span', editable, todoDetail);
+        detail.className = detailType;
+        if (detailType == 'priority') {
+            detail.classList.add(todoDetail);
+        }
         create('button', editable, 'Edit').addEventListener('click', enterEditMode.bind(VIEW, editable));
         return editable;
     }

@@ -1,4 +1,14 @@
+@font-face {
+    font-family: 'Jost';
+    src: url(./assets/Jost-Medium.ttf);
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(./assets/RobotoCondensed-Light.ttf);
+}
+
 $test: 1px dashed red;
+$fallback: Helvetica, Arial, sans-serif;
 
 * {
     box-sizing: border-box;
@@ -10,6 +20,7 @@ body, ul, ol, li, h1, h2, h3, h4, p {
 }
 
 body {
+    background-image: url('./assets/tweed.jpg');
     overflow: hidden;
     width: 100vw;
     height: 100vh;
@@ -17,6 +28,13 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    color: white;
+    font-family: 'Roboto', $fallback;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Jost', $fallback;
+    font-weight: normal;
 }
 
 aside, main {
@@ -26,24 +44,28 @@ aside, main {
     width: 250px;
     height: 650px;
 } main {
-    border: $test;
     width: 710px;
     height: 610px;
     margin: 20px;
     padding-bottom: 0;
     padding-top: 0;
     padding-right: 0;
+    background-color: rgba(0,0,0,0.25);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.15), 0 1px 5px rgba(0,0,0,0.75) inset, 0 0 100px rgba(0,0,0,0.15) inset;
 } 
 
 #projects, #todos {
-
+    height: 100%;
+    position: relative;
 } #projects {
     display: flex;
     flex-direction: column;
     gap: 15px;
 } #todos {
-    height: 100%;
     overflow: hidden;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;  
     &:hover {
         overflow-y: auto;
     }
@@ -59,13 +81,21 @@ aside, main {
 }
 
 .todo {
-    border: $test;
+    background-color: rgba(0,0,0,0.25);
+    padding: 15px;
+    margin-bottom: 15px;
     position: relative;
     .close, .edit {
         position: absolute;
-        top: 0;
+        bottom: 0;
         right: 0;
     }
+}
+
+.delete-project {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 .task-list {
@@ -83,4 +113,68 @@ aside, main {
     small:first-child::after {
         content: ' / ';
     }
+}
+
+.panel {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    button {
+        white-space: nowrap;
+    }
+}
+
+.isolate {
+    height: calc(100% - 15px);
+}
+
+.title {
+    font-family: 'Jost', $fallback;
+    font-size: 1.75rem;
+    line-height: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.description {
+    margin-top: 10px;
+}
+
+.card div.priority, .isolate div.priority {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.card div.priority {
+    top: 10px;
+    right: 10px;
+}
+
+.isolate div.priority {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+} 
+
+.card div.priority, .isolate span.priority {
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-family: 'Jost', $fallback;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    font-weight: bold;
+    padding-top: 6px;
+}
+
+.card div.priority.none, .isolate span.priority.none {
+    background-color: gray;
+} .card div.priority.high, .isolate span.priority.high {
+    background-color: crimson;
+} .card div.priority.medium, .isolate span.priority.medium {
+    background-color: goldenrod;
+} .card div.priority.low, .isolate span.priority.low {
+    background-color: yellowgreen;
 }
